@@ -67,8 +67,8 @@ VOID CLASSCALL InitializeMapControl(MAPCONTROLPTR self)
 {
     self->Description->Self->Initialize(self->Description);
 
-    self->Map.Unk01.Height = 0;
-    self->Map.Unk01.Width = 0;
+    self->Map.Unk01.TypeAndSize.Height = 0;
+    self->Map.Unk01.TypeAndSize.Width = 0;
 
     self->IsHover = FALSE;
 
@@ -93,12 +93,12 @@ VOID CLASSCALL TickMapControl(MAPCONTROLPTR self)
 {
     self->Description->Self->Tick(self->Description);
 
-    if (self->Map.Unk01.Width != 0 && self->X != 0)
+    if (self->Map.Unk01.TypeAndSize.Width != 0 && self->X != 0)
     {
-        CONST BOOL large = self->Map.Unk01.Width <= MAX_MAP_SIZE && self->Map.Unk01.Height <= MAX_MAP_SIZE;
+        CONST BOOL large = self->Map.Unk01.TypeAndSize.Width <= MAX_MAP_SIZE && self->Map.Unk01.TypeAndSize.Height <= MAX_MAP_SIZE;
 
-        CONST U32 height = large ? self->Map.Unk01.Height / 2 : self->Map.Unk01.Height;
-        CONST U32 width = large ? self->Map.Unk01.Width / 2 : self->Map.Unk01.Width;
+        CONST U32 height = large ? self->Map.Unk01.TypeAndSize.Height / 2 : self->Map.Unk01.TypeAndSize.Height;
+        CONST U32 width = large ? self->Map.Unk01.TypeAndSize.Width / 2 : self->Map.Unk01.TypeAndSize.Width;
 
         for (U32 x = 0; x < height; x++)
         {
@@ -197,7 +197,7 @@ VOID CLASSCALL InitializeMapMapControl(MAPCONTROLPTR self, LPCSTR name)
 
                 if (self->Size != NULL)
                 {
-                    wsprintfA(message, "%dx%d", self->Map.Unk01.Width, self->Map.Unk01.Height);
+                    wsprintfA(message, "%dx%d", self->Map.Unk01.TypeAndSize.Width, self->Map.Unk01.TypeAndSize.Height);
                     SlectLabelControlText(self->Size, message);
                 }
 
@@ -215,10 +215,10 @@ VOID CLASSCALL InitializeMapMapControl(MAPCONTROLPTR self, LPCSTR name)
                     SlectLabelControlText(self->Actors, message);
                 }
 
-                CONST BOOL large = self->Map.Unk01.Width <= MAX_MAP_SIZE && self->Map.Unk01.Height <= MAX_MAP_SIZE;
+                CONST BOOL large = self->Map.Unk01.TypeAndSize.Width <= MAX_MAP_SIZE && self->Map.Unk01.TypeAndSize.Height <= MAX_MAP_SIZE;
 
-                CONST U32 height = large ? self->Map.Unk01.Height / 2 : self->Map.Unk01.Height;
-                CONST U32 width = large ? self->Map.Unk01.Width / 2 : self->Map.Unk01.Width;
+                CONST U32 height = large ? self->Map.Unk01.TypeAndSize.Height / 2 : self->Map.Unk01.TypeAndSize.Height;
+                CONST U32 width = large ? self->Map.Unk01.TypeAndSize.Width / 2 : self->Map.Unk01.TypeAndSize.Width;
 
                 for (U32 x = 0; x < height; x++)
                 {
@@ -235,8 +235,8 @@ VOID CLASSCALL InitializeMapMapControl(MAPCONTROLPTR self, LPCSTR name)
 
 DEFAULT:
 
-    self->Map.Unk01.Height = 0;
-    self->Map.Unk01.Width = 0;
+    self->Map.Unk01.TypeAndSize.Height = 0;
+    self->Map.Unk01.TypeAndSize.Width = 0;
 
     self->Map.Unk01.Actors.Max = 0;
 
