@@ -224,17 +224,17 @@ BOOL InitializeMultiMap(LPCSTR name, MAPPTR map)
     ReadZipFile(&zip, &map->Unk00, sizeof(MAPSTRUCT1));
     ReadZipFile(&zip, &map->Unk01.Actors, sizeof(MAPMINMAX));
 
-    ReadZipFile(&zip, &map->Unk02, MAX_MAP_STRUCT3_COUNT * sizeof(MAPSTRUCT3));
+    ReadZipFile(&zip, &map->Mis_objects.Unk00, MAX_MAP_STRUCT3_COUNT * sizeof(MAPSTRUCT3));
 
     for (U32 x = 0; x < MAX_MAP_STRUCT3_COUNT; x++)
     {
-        if (map->Unk02[x].Unk00 < 0 || map->Unk02[x].Unk01 < 0
-            || map->Unk01.TypeAndSize.Width <= map->Unk02[x].Unk00 || map->Unk01.TypeAndSize.Height <= map->Unk02[x].Unk01
-            || map->Unk02[x].Unk02 < 0 || (MAX_MAP_SIZE - 1) < map->Unk02[x].Unk02)
+        if (map->Mis_objects.Unk00[x].Unk00 < 0 || map->Mis_objects.Unk00[x].Unk01 < 0
+            || map->Unk01.TypeAndSize.Width <= map->Mis_objects.Unk00[x].Unk00 || map->Unk01.TypeAndSize.Height <= map->Mis_objects.Unk00[x].Unk01
+            || map->Mis_objects.Unk00[x].Unk02 < 0 || (MAX_MAP_SIZE - 1) < map->Mis_objects.Unk00[x].Unk02)
         {
-            map->Unk02[x].Unk00 = 0;
-            map->Unk02[x].Unk02 = 0;
-            map->Unk02[x].Unk01 = 0;
+            map->Mis_objects.Unk00[x].Unk00 = 0;
+            map->Mis_objects.Unk00[x].Unk02 = 0;
+            map->Mis_objects.Unk00[x].Unk01 = 0;
         }
     }
 
@@ -242,13 +242,13 @@ BOOL InitializeMultiMap(LPCSTR name, MAPPTR map)
 
     for (U32 x = 0; x < MAX_MAP_STRUCT4_COUNT; x++)
     {
-        ReadZipFile(&zip, &map->Unk03[x], sizeof(U32));
-        map->Unk03[x].Unk01 = 0xffff; // TODO
+        ReadZipFile(&zip, &map->Mis_objects.Unk01[x], sizeof(U32));
+        map->Mis_objects.Unk01[x].Unk01 = 0xffff; // TODO
     }
 
     {
-        CHAR buffer[272]; // TODO
-        ReadZipFile(&zip, buffer, 272); // TODO
+        CHAR mis_objects_buffer[272]; // TODO
+        ReadZipFile(&zip, mis_objects_buffer, 272); // TODO
     }
 
     FUN_10017f60(map, &zip);

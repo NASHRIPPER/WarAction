@@ -76,17 +76,17 @@ typedef struct MapStruct4 // TODO
     U16 Unk01; // TODO
 } MAPSTRUCT4, * MAPSTRUCT4PTR;
 
-typedef struct MapStruct5 // TODO
+typedef struct MisObjects // TODO
 {
-	S32 Unk00; // TODO
-} MAPSTRUCT5, * MAPSTRUCT5PTR;
+	MAPSTRUCT3 Unk00[MAX_MAP_STRUCT3_COUNT]; // TODO;
+	MAPSTRUCT4 Unk01[MAX_MAP_STRUCT4_COUNT]; // TODO;
+} MIS_OBJECTS, * MIS_OBJECTS_PTR;
 
 typedef struct Map
 {
     MAPSTRUCT1  Unk00; // TODO
     MAPSTRUCT2  Unk01; // TODO
-    MAPSTRUCT3  Unk02[MAX_MAP_STRUCT3_COUNT]; // TODO
-    MAPSTRUCT4  Unk03[MAX_MAP_STRUCT4_COUNT]; // TODO
+	MIS_OBJECTS Mis_objects;
     LPSTR       Description;
     PIXEL*      Pixels; // TODO
     LPSTR       Unk0x154; // TODO
