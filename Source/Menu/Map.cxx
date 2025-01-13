@@ -46,7 +46,7 @@ MAPPTR CLASSCALL ActivateMap(MAPPTR self)
     self->Description = NULL;
     self->Pixels = NULL;
     self->Unk0x154 = NULL;
-
+    
     return self;
 }
 
@@ -322,23 +322,22 @@ BOOL InitializeMultiMap(LPCSTR name, MAPPTR map)
 // 0x10017f60 parsing scripts
 BOOL FUN_10017f60(MAPPTR map, ZIPFILEPTR file) // TODO
 {
-    U32 count = 0;
-    ReadZipFile(file, &count, sizeof(U32));
+    U32 script_num = 0;
+    ReadZipFile(file, &script_num, sizeof(U32));
 
-    for (U32 x = 0; x < count; x++)
+    for (U32 x = 0; x < script_num; x++)
     {
-        U32 length = 0;
-        ReadZipFile(file, &length, sizeof(U32));
+        U32 script_length = 0;
+        ReadZipFile(file, &script_length, sizeof(U32));
 
-        if (length != 0)
+        if (script_length != 0)
         {
-            LPVOID value = malloc(length); // TODO
-            ReadZipFile(file, value, length);
-            FUN_10017FE0(map, value); // TODO Decoding script commands
-            free(value);
+            LPVOID scripts = malloc(script_length); // TODO
+            ReadZipFile(file, scripts, script_length);
+            FUN_10017FE0(map, scripts); // TODO Decoding script commands
+            free(scripts);
         }
     }
-
     return TRUE;
 }
 
@@ -346,23 +345,23 @@ BOOL FUN_10017f60(MAPPTR map, ZIPFILEPTR file) // TODO
 S32 FUN_10017FE0(MAPPTR map, LPVOID value)
 {
     S32* result; // eax
-    S32* v3; // ebp
+    S32* position; // ebp
     S32 v4; // edi
-    S32* v5; // esi
+    S32* Stack_for_num_scripts; // esi
     S32 v6; // eax
     S32 v7; // [esp+4h] [ebp-1004h]
     S8 v8; // [esp+8h] [ebp-1000h] BYREF
 
     result = (S32*)value;
-    v3 = (S32*)value;
-    if (*(S32*)value != 0x7FFFFFFF) // Filter conditions and parameters for these conditions
+    position = (S32*)value;
+    if (*(S32*)value != ScriptEND)
     {
         v4 = v7;
-        v5 = (S32*)&v8;
+        Stack_for_num_scripts = (S32*)&v8;
         do
         {
-            v6 = *v3;
-            if (*v3 >= 0)
+            v6 = *position;
+            if (*position >= 0) // Filter conditions and parameters for these conditions
             {
                 switch (v6)
                 {
@@ -375,8 +374,8 @@ S32 FUN_10017FE0(MAPPTR map, LPVOID value)
                     case IfGroupBehaviourZone2:
                     case IfGroupBehaviourGroup1:
                     case IfGroupBehaviourGroup2:
-                        v4 = *(v5 - 2);
-                        --v5;
+                        v4 = *(Stack_for_num_scripts - 2);
+                        --Stack_for_num_scripts;
                         break;
                     case IfGroupUnitCountOfType:
                     case IfPlayerUnitCountOfType:
@@ -386,8 +385,8 @@ S32 FUN_10017FE0(MAPPTR map, LPVOID value)
                     case IfPlanesForPlayerMissionsCount:
                     case IfZoneUnitCountPercentForGroup:
                     case IfZoneUnitCountPercentForPlayer:
-                        v4 = *(v5 - 4);
-                        v5 -= 3;
+                        v4 = *(Stack_for_num_scripts - 4);
+                        Stack_for_num_scripts -= 3;
                         break;
                     case ReturnIfFalse:
                     case TimerStop:
@@ -398,12 +397,12 @@ S32 FUN_10017FE0(MAPPTR map, LPVOID value)
                     case MissionComplete:
                     case PlanesRouteAddObject:
                     case PlanesRouteAddObjectAsDrop:
-                        --v5;
+                        --Stack_for_num_scripts;
                         goto LABEL_22;
                     case PlanesForPlayerSendToZoneAndLand:
                     case PlanesForPlayerSendToObjectAndLand:
                     case MultiReinforcementStart:
-                        v5 -= 4;
+                        Stack_for_num_scripts -= 4;
                         goto LABEL_22;
                     case TimerStart:
                     case GroupBehaviourSet:
@@ -416,57 +415,57 @@ S32 FUN_10017FE0(MAPPTR map, LPVOID value)
                     case GroupGiveToPlayer:
                     case GroupShotOneRocketArtilleryToZone:
                     case GroupShotOneRocketArtilleryToObject:
-                        v5 -= 2;
+                        Stack_for_num_scripts -= 2;
                         goto LABEL_22;
                     case PlanesAddToPlayer:
                     case PlanesMissionsAddToPlayer:
                     case PlanesRouteSendAndLandForPlayer:
                     case VariableModify:
-                        v5 -= 3;
+                        Stack_for_num_scripts -= 3;
                         goto LABEL_22;
                     case Negate:
                     case IfTimerComplete:
                     case IfObjectIsDestroyed:
-                        v4 = *(v5 - 1);
+                        v4 = *(Stack_for_num_scripts - 1);
                         break;
                     case IfGroupUnitCountPercentOfTypeRelativeToGroup:
-                        v4 = *(v5 - 6);
-                        v5 -= 5;
+                        v4 = *(Stack_for_num_scripts - 6);
+                        Stack_for_num_scripts -= 5;
                         break;
                     case IfPlayerUnitCountPercentOfTypeRelativeToPlayer:
-                        v4 = *(v5 - 5);
-                        v5 -= 4;
+                        v4 = *(Stack_for_num_scripts - 5);
+                        Stack_for_num_scripts -= 4;
                         break;
                     case GroupResurrectThroughFlagWithParams:
-                        v5 -= 7;
+                        Stack_for_num_scripts -= 7;
                         goto LABEL_22;
                     case ReinforcementSend:
-                        v5 -= 5;
+                        Stack_for_num_scripts -= 5;
                     LABEL_22:
-                        v4 = *v5;
+                        v4 = *Stack_for_num_scripts;
                         break;
                     case IfGroupWasAttackedTimeAgo:
                     case IfVariableValue:
-                        v4 = *(v5 - 3);
-                        v5 -= 2;
+                        v4 = *(Stack_for_num_scripts - 3);
+                        Stack_for_num_scripts -= 2;
                         break;
                     case IfMissionStart:
-                        *v5++ = v4;
+                        *Stack_for_num_scripts++ = v4;
                         break;
                     case MultiReinforcementForFlags:
-                        v4 = *(v5 - 5);
-                        v5 -= 5;
+                        v4 = *(Stack_for_num_scripts - 5);
+                        Stack_for_num_scripts -= 5;
                         //sub_100181F0(a1, v4);
                         break;
                     case MultiPlanesForFlags:
                     case MultiPlanesMissionsForFlags:
-                        v4 = *(v5 - 3);
-                        v5 -= 3;
+                        v4 = *(Stack_for_num_scripts - 3);
+                        Stack_for_num_scripts -= 3;
                         //sub_100181F0(a1, v4);
                         break;
                     case MultiPhraseForFlags:
-                        v4 = *(v5 - 2);
-                        v5 -= 2;
+                        v4 = *(Stack_for_num_scripts - 2);
+                        Stack_for_num_scripts -= 2;
                         //sub_100181F0(a1, v4);
                         break;
                     default:
@@ -475,10 +474,10 @@ S32 FUN_10017FE0(MAPPTR map, LPVOID value)
             }
             else
             {
-                *v5++ = v6 & 0x7FFFFFFF; //remove the negative value from the parameter
+                *Stack_for_num_scripts++ = v6 & 0x7FFFFFFF; //remove the negative value from the parameter
             }
-            result = (S32*)v3[1];
-            ++v3;
+            result = (S32*)position[1];
+            ++position;
         } 
         while (result != (S32*)ScriptEND);
     }
