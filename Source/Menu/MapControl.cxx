@@ -67,8 +67,8 @@ VOID CLASSCALL InitializeMapControl(MAPCONTROLPTR self)
 {
     self->Description->Self->Initialize(self->Description);
 
-    self->Map.Unk01.TypeAndSize.Height = 0;
-    self->Map.Unk01.TypeAndSize.Width = 0;
+    self->Map.Map_Header2.TypeAndSize.Height = 0;
+    self->Map.Map_Header2.TypeAndSize.Width = 0;
 
     self->IsHover = FALSE;
 
@@ -93,12 +93,12 @@ VOID CLASSCALL TickMapControl(MAPCONTROLPTR self)
 {
     self->Description->Self->Tick(self->Description);
 
-    if (self->Map.Unk01.TypeAndSize.Width != 0 && self->X != 0)
+    if (self->Map.Map_Header2.TypeAndSize.Width != 0 && self->X != 0)
     {
-        CONST BOOL large = self->Map.Unk01.TypeAndSize.Width <= MAX_MAP_SIZE && self->Map.Unk01.TypeAndSize.Height <= MAX_MAP_SIZE;
+        CONST BOOL large = self->Map.Map_Header2.TypeAndSize.Width <= MAX_MAP_SIZE && self->Map.Map_Header2.TypeAndSize.Height <= MAX_MAP_SIZE;
 
-        CONST U32 height = large ? self->Map.Unk01.TypeAndSize.Height / 2 : self->Map.Unk01.TypeAndSize.Height;
-        CONST U32 width = large ? self->Map.Unk01.TypeAndSize.Width / 2 : self->Map.Unk01.TypeAndSize.Width;
+        CONST U32 height = large ? self->Map.Map_Header2.TypeAndSize.Height / 2 : self->Map.Map_Header2.TypeAndSize.Height;
+        CONST U32 width = large ? self->Map.Map_Header2.TypeAndSize.Width / 2 : self->Map.Map_Header2.TypeAndSize.Width;
 
         for (U32 x = 0; x < height; x++)
         {
@@ -191,34 +191,34 @@ VOID CLASSCALL InitializeMapMapControl(MAPCONTROLPTR self, LPCSTR name)
                 self->Description->Color = ADJUSTCOLORS(0x6400, 0xFF00, 0x6400);
 
                 SelectDescriptionControlText(self->Description,
-                    self->Map.Description == NULL ? StringsState.Scratch : self->Map.Description);
+                    self->Map.Mis_Desc == NULL ? StringsState.Scratch : self->Map.Mis_Desc);
 
                 self->Description->Self->Initialize(self->Description);
 
                 if (self->Size != NULL)
                 {
-                    wsprintfA(message, "%dx%d", self->Map.Unk01.TypeAndSize.Width, self->Map.Unk01.TypeAndSize.Height);
+                    wsprintfA(message, "%dx%d", self->Map.Map_Header2.TypeAndSize.Width, self->Map.Map_Header2.TypeAndSize.Height);
                     SlectLabelControlText(self->Size, message);
                 }
 
                 if (self->Actors != NULL)
                 {
-                    if (self->Map.Unk01.Actors.Min == self->Map.Unk01.Actors.Max)
+                    if (self->Map.Map_Header2.Actors.Min == self->Map.Map_Header2.Actors.Max)
                     {
-                        wsprintfA(message, "%d", self->Map.Unk01.Actors.Min);
+                        wsprintfA(message, "%d", self->Map.Map_Header2.Actors.Min);
                     }
                     else
                     {
-                        wsprintfA(message, "%d-%d", self->Map.Unk01.Actors.Min, self->Map.Unk01.Actors.Max);
+                        wsprintfA(message, "%d-%d", self->Map.Map_Header2.Actors.Min, self->Map.Map_Header2.Actors.Max);
                     }
 
                     SlectLabelControlText(self->Actors, message);
                 }
 
-                CONST BOOL large = self->Map.Unk01.TypeAndSize.Width <= MAX_MAP_SIZE && self->Map.Unk01.TypeAndSize.Height <= MAX_MAP_SIZE;
+                CONST BOOL large = self->Map.Map_Header2.TypeAndSize.Width <= MAX_MAP_SIZE && self->Map.Map_Header2.TypeAndSize.Height <= MAX_MAP_SIZE;
 
-                CONST U32 height = large ? self->Map.Unk01.TypeAndSize.Height / 2 : self->Map.Unk01.TypeAndSize.Height;
-                CONST U32 width = large ? self->Map.Unk01.TypeAndSize.Width / 2 : self->Map.Unk01.TypeAndSize.Width;
+                CONST U32 height = large ? self->Map.Map_Header2.TypeAndSize.Height / 2 : self->Map.Map_Header2.TypeAndSize.Height;
+                CONST U32 width = large ? self->Map.Map_Header2.TypeAndSize.Width / 2 : self->Map.Map_Header2.TypeAndSize.Width;
 
                 for (U32 x = 0; x < height; x++)
                 {
@@ -235,10 +235,10 @@ VOID CLASSCALL InitializeMapMapControl(MAPCONTROLPTR self, LPCSTR name)
 
 DEFAULT:
 
-    self->Map.Unk01.TypeAndSize.Height = 0;
-    self->Map.Unk01.TypeAndSize.Width = 0;
+    self->Map.Map_Header2.TypeAndSize.Height = 0;
+    self->Map.Map_Header2.TypeAndSize.Width = 0;
 
-    self->Map.Unk01.Actors.Max = 0;
+    self->Map.Map_Header2.Actors.Max = 0;
 
     self->Description->Self->Disable(self->Description);
 

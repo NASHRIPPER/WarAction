@@ -44,8 +44,8 @@ typedef struct MapStruct1 // TODO
 
 typedef struct MapMinMax
 {
-    U32 Min;
-    U32 Max;
+    U32 Min_Players;
+    U32 Max_Players;
     U32 Unk02; // TODO
     U32 Unk03; // TODO
 } MAPMINMAX, * MAPMINMAXPTR;
@@ -82,14 +82,20 @@ typedef struct MisObjects // TODO
 	MAPSTRUCT4 Unk01[MAX_MAP_STRUCT4_COUNT]; // TODO;
 } MIS_OBJECTS, * MIS_OBJECTS_PTR;
 
+typedef struct MisScripts// TODO
+{
+	 // TODO;
+} MIS_SCRIPTS, * MIS_SCRIPTS_PTR;
+
 typedef struct Map
 {
-    MAPSTRUCT1  Unk00; // TODO
-    MAPSTRUCT2  Unk01; // TODO
+    MAPSTRUCT1  Map_Header1; // TODO
+    MAPSTRUCT2  Map_Header2; // TODO
 	MIS_OBJECTS Mis_objects;
-    LPSTR       Description;
+    LPSTR       Mis_Desc;
     PIXEL*      Pixels; // TODO
     LPSTR       Unk0x154; // TODO
+	MIS_SCRIPTS Mis_Scripts; // TODO
 } MAP, * MAPPTR;
 
 enum SCRIPTS_NUM

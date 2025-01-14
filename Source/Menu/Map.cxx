@@ -29,21 +29,21 @@ SOFTWARE.
 // 0x10017e00
 MAPPTR CLASSCALL ActivateMap(MAPPTR self)
 {
-    self->Unk00.Unk00 = 0; // TODO
-    self->Unk00.Unk01 = 0; // TODO
-    self->Unk00.Unk02 = 0; // TODO
-    self->Unk00.Unk03 = 0; // TODO
+    self->Map_Header1.Unk00 = 0; // TODO
+    self->Map_Header1.Unk01 = 0; // TODO
+    self->Map_Header1.Unk02 = 0; // TODO
+    self->Map_Header1.Unk03 = 0; // TODO
 
-    self->Unk01.Actors.Min = 0;
-    self->Unk01.Actors.Max = 0;
-    self->Unk01.Actors.Unk02 = 0; // TODO
-    self->Unk01.Actors.Unk03 = 0; // TODO
+    self->Map_Header2.Actors.Min_Players = 0;
+    self->Map_Header2.Actors.Max_Players = 0;
+    self->Map_Header2.Actors.Unk02 = 0; // TODO
+    self->Map_Header2.Actors.Unk03 = 0; // TODO
 
-    self->Unk01.TypeAndSize.Type = 0; // TODO
-    self->Unk01.TypeAndSize.Width = 0;
-    self->Unk01.TypeAndSize.Height = 0;
+    self->Map_Header2.TypeAndSize.Type = 0; // TODO
+    self->Map_Header2.TypeAndSize.Width = 0;
+    self->Map_Header2.TypeAndSize.Height = 0;
 
-    self->Description = NULL;
+    self->Mis_Desc = NULL;
     self->Pixels = NULL;
     self->Unk0x154 = NULL;
     
@@ -53,11 +53,11 @@ MAPPTR CLASSCALL ActivateMap(MAPPTR self)
 // 0x10017e50
 VOID CLASSCALL DisposeMap(MAPPTR self)
 {
-    if (self->Description != NULL)
+    if (self->Mis_Desc != NULL)
     {
-        free(self->Description);
+        free(self->Mis_Desc);
 
-        self->Description = NULL;
+        self->Mis_Desc = NULL;
     }
 
     if (self->Unk0x154 != NULL)
@@ -109,13 +109,13 @@ BOOL InitializeSingleMap(LPCSTR name, MAPPTR map)
         }
     }
 
-    ReadZipFile(&zip, &map->Unk00, sizeof(MAPSTRUCT1));
-    ReadZipFile(&zip, &map->Unk01, sizeof(MAPSTRUCT2));
+    ReadZipFile(&zip, &map->Map_Header1, sizeof(MAPSTRUCT1));
+    ReadZipFile(&zip, &map->Map_Header2, sizeof(MAPSTRUCT2));
 
-    map->Unk01.Actors.Min = 1;
-    map->Unk01.Actors.Max = 1;
-    map->Unk01.Actors.Unk02 = 1; // TODO
-    map->Unk01.Actors.Unk03 = 1; // TODO
+    map->Map_Header2.Actors.Min_Players = 1;
+    map->Map_Header2.Actors.Max_Players = 1;
+    map->Map_Header2.Actors.Unk02 = 1; // TODO
+    map->Map_Header2.Actors.Unk03 = 1; // TODO
 
     {
         U32 length = 0;
@@ -126,13 +126,13 @@ BOOL InitializeSingleMap(LPCSTR name, MAPPTR map)
 
         ReadZipFile(&zip, description, length);
 
-        map->Description = AcquireCleanUnicodeString(description, TRUE);
+        map->Mis_Desc = AcquireCleanUnicodeString(description, TRUE);
     }
 
-    if (map->Description[0] == '$')
+    if (map->Mis_Desc[0] == '$')
     {
         U32 x = 0;
-        LPSTR description = map->Description;
+        LPSTR description = map->Mis_Desc;
 
         while (description[x] != '\n' && description[x] != '\r') 
         { 
@@ -150,9 +150,9 @@ BOOL InitializeSingleMap(LPCSTR name, MAPPTR map)
         } 
         while (description[x] == '\r');
 
-        map->Description = (LPSTR)malloc(strlen(&description[x]) + 1);
+        map->Mis_Desc = (LPSTR)malloc(strlen(&description[x]) + 1);
 
-        strcpy(map->Description, &description[x]);
+        strcpy(map->Mis_Desc, &description[x]);
 
         map->Unk0x154 = (LPSTR)malloc(strlen(description));
 
@@ -162,19 +162,19 @@ BOOL InitializeSingleMap(LPCSTR name, MAPPTR map)
     }
     else { map->Unk0x154 = NULL; }
 
-    for (U32 x = 0; map->Description[x] != NULL; x++)
+    for (U32 x = 0; map->Mis_Desc[x] != NULL; x++)
     {
-        if (map->Description[x] == '#') 
+        if (map->Mis_Desc[x] == '#')
         { 
-            map->Description[x] = NULL; break; 
+            map->Mis_Desc[x] = NULL; break;
         }
     }
 
     {
         // Calculating the size of the minimap
-        CONST U32 size = map->Unk01.TypeAndSize.Width <= MAX_MAP_SIZE && map->Unk01.TypeAndSize.Height <= MAX_MAP_SIZE
-            ? map->Unk01.TypeAndSize.Height * map->Unk01.TypeAndSize.Width * sizeof(PIXEL)
-            : map->Unk01.TypeAndSize.Height * map->Unk01.TypeAndSize.Width / 2;
+        CONST U32 size = map->Map_Header2.TypeAndSize.Width <= MAX_MAP_SIZE && map->Map_Header2.TypeAndSize.Height <= MAX_MAP_SIZE
+            ? map->Map_Header2.TypeAndSize.Height * map->Map_Header2.TypeAndSize.Width * sizeof(PIXEL)
+            : map->Map_Header2.TypeAndSize.Height * map->Map_Header2.TypeAndSize.Width / 2;
 
         map->Pixels = (PIXEL*)malloc(size);
         ReadZipFile(&zip, map->Pixels, size);
@@ -221,15 +221,15 @@ BOOL InitializeMultiMap(LPCSTR name, MAPPTR map)
         }
     }
 
-    ReadZipFile(&zip, &map->Unk00, sizeof(MAPSTRUCT1));
-    ReadZipFile(&zip, &map->Unk01.Actors, sizeof(MAPMINMAX));
+    ReadZipFile(&zip, &map->Map_Header1, sizeof(MAPSTRUCT1));
+    ReadZipFile(&zip, &map->Map_Header2.Actors, sizeof(MAPMINMAX));
 
     ReadZipFile(&zip, &map->Mis_objects.Unk00, MAX_MAP_STRUCT3_COUNT * sizeof(MAPSTRUCT3));
 
     for (U32 x = 0; x < MAX_MAP_STRUCT3_COUNT; x++)
     {
         if (map->Mis_objects.Unk00[x].Unk00 < 0 || map->Mis_objects.Unk00[x].Unk01 < 0
-            || map->Unk01.TypeAndSize.Width <= map->Mis_objects.Unk00[x].Unk00 || map->Unk01.TypeAndSize.Height <= map->Mis_objects.Unk00[x].Unk01
+            || map->Map_Header2.TypeAndSize.Width <= map->Mis_objects.Unk00[x].Unk00 || map->Map_Header2.TypeAndSize.Height <= map->Mis_objects.Unk00[x].Unk01
             || map->Mis_objects.Unk00[x].Unk02 < 0 || (MAX_MAP_SIZE - 1) < map->Mis_objects.Unk00[x].Unk02)
         {
             map->Mis_objects.Unk00[x].Unk00 = 0;
@@ -238,7 +238,7 @@ BOOL InitializeMultiMap(LPCSTR name, MAPPTR map)
         }
     }
 
-    ReadZipFile(&zip, &map->Unk01.TypeAndSize, sizeof(MAPTYPESIZE));
+    ReadZipFile(&zip, &map->Map_Header2.TypeAndSize, sizeof(MAPTYPESIZE));
 
     for (U32 x = 0; x < MAX_MAP_STRUCT4_COUNT; x++)
     {
@@ -262,13 +262,13 @@ BOOL InitializeMultiMap(LPCSTR name, MAPPTR map)
 
         ReadZipFile(&zip, description, length);
 
-        map->Description = AcquireCleanUnicodeString(description, TRUE);
+        map->Mis_Desc = AcquireCleanUnicodeString(description, TRUE);
     }
 
-    if (map->Description[0] == '$')
+    if (map->Mis_Desc[0] == '$')
     {
         U32 x = 0;
-        LPSTR description = map->Description;
+        LPSTR description = map->Mis_Desc;
 
         while (description[x] != '\n' && description[x] != '\r') 
         { 
@@ -287,9 +287,9 @@ BOOL InitializeMultiMap(LPCSTR name, MAPPTR map)
         } 
         while (description[x] == '\r');
 
-        map->Description = (LPSTR)malloc(strlen(&description[x]) + 1);
+        map->Mis_Desc = (LPSTR)malloc(strlen(&description[x]) + 1);
 
-        strcpy(map->Description, &description[x]);
+        strcpy(map->Mis_Desc, &description[x]);
 
         map->Unk0x154 = (LPSTR)malloc(strlen(description));
 
@@ -299,16 +299,16 @@ BOOL InitializeMultiMap(LPCSTR name, MAPPTR map)
     }
     else { map->Unk0x154 = NULL; }
 
-    for (U32 x = 0; map->Description[x] != NULL; x++)
+    for (U32 x = 0; map->Mis_Desc[x] != NULL; x++)
     {
-        if (map->Description[x] == '#') { map->Description[x] = NULL; break; }
+        if (map->Mis_Desc[x] == '#') { map->Mis_Desc[x] = NULL; break; }
     }
 
     {
         // Calculating the size of the minimap
-        CONST U32 size = map->Unk01.TypeAndSize.Width <= MAX_MAP_SIZE && map->Unk01.TypeAndSize.Height <= MAX_MAP_SIZE
-            ? map->Unk01.TypeAndSize.Height * map->Unk01.TypeAndSize.Width * sizeof(PIXEL)
-            : map->Unk01.TypeAndSize.Height * map->Unk01.TypeAndSize.Width / 2; // TODO
+        CONST U32 size = map->Map_Header2.TypeAndSize.Width <= MAX_MAP_SIZE && map->Map_Header2.TypeAndSize.Height <= MAX_MAP_SIZE
+            ? map->Map_Header2.TypeAndSize.Height * map->Map_Header2.TypeAndSize.Width * sizeof(PIXEL)
+            : map->Map_Header2.TypeAndSize.Height * map->Map_Header2.TypeAndSize.Width / 2; // TODO
 
         map->Pixels = (PIXEL*)malloc(size);
         ReadZipFile(&zip, map->Pixels, size);
