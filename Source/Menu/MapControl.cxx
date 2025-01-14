@@ -203,13 +203,13 @@ VOID CLASSCALL InitializeMapMapControl(MAPCONTROLPTR self, LPCSTR name)
 
                 if (self->Actors != NULL)
                 {
-                    if (self->Map.Map_Header2.Actors.Min == self->Map.Map_Header2.Actors.Max)
+                    if (self->Map.Map_Header2.Actors.Min_Players == self->Map.Map_Header2.Actors.Max_Players)
                     {
-                        wsprintfA(message, "%d", self->Map.Map_Header2.Actors.Min);
+                        wsprintfA(message, "%d", self->Map.Map_Header2.Actors.Min_Players);
                     }
                     else
                     {
-                        wsprintfA(message, "%d-%d", self->Map.Map_Header2.Actors.Min, self->Map.Map_Header2.Actors.Max);
+                        wsprintfA(message, "%d-%d", self->Map.Map_Header2.Actors.Min_Players, self->Map.Map_Header2.Actors.Max_Players);
                     }
 
                     SlectLabelControlText(self->Actors, message);
@@ -238,7 +238,7 @@ DEFAULT:
     self->Map.Map_Header2.TypeAndSize.Height = 0;
     self->Map.Map_Header2.TypeAndSize.Width = 0;
 
-    self->Map.Map_Header2.Actors.Max = 0;
+    self->Map.Map_Header2.Actors.Max_Players = 0;
 
     self->Description->Self->Disable(self->Description);
 
