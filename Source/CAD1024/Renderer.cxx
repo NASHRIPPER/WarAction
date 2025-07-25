@@ -2872,7 +2872,7 @@ VOID DrawSprite(S32 x, S32 y, IMAGEPALETTESPRITEPTR sprite, LPVOID pal, IMAGESPR
                 y = RendererState.UI.Window.Y;
             }
 
-            CONST S32 overflow = y + RendererState.Sprite.Height - (ModuleState.Window.Height + 1);
+            CONST S32 overflow = y + RendererState.Sprite.Height - (RendererState.UI.Window.Height + 1);
             BOOL draw = overflow <= 0;
 
             if (!draw)
@@ -3055,7 +3055,7 @@ VOID DrawSprite(S32 x, S32 y, IMAGEPALETTESPRITEPTR sprite, LPVOID pal, IMAGESPR
             }
 
 
-            CONST S32 overflow = y + RendererState.Sprite.Height - (ModuleState.Window.Height + 1);
+            CONST S32 overflow = y + RendererState.Sprite.Height - (RendererState.UI.Window.Height + 1);
             BOOL draw = overflow <= 0;
 
             if (!draw)
