@@ -29,7 +29,7 @@ SOFTWARE.
 #define MAX_MAP_SIZE            128
 
 #define MAX_MAP_STRUCT3_COUNT   16 /* TODO */
-#define MAX_MAP_STRUCT4_COUNT   32 /* TODO */
+#define MAX_MAP_MISSION_OBJECTS   32
 
 #define MAP_FILE_SINGLE_MAGIC   0x4D535353 /* MSSS */
 #define MAP_FILE_MULTI_MAGIC    0x4D4D5353 /* MMSS */
@@ -80,16 +80,10 @@ typedef struct MapStruct3 // TODO
     U16 Unk02; // TODO
 } MAPSTRUCT3, * MAPSTRUCT3PTR;
 
-typedef struct MapStruct4 // TODO
+typedef struct MissionObjects // TODO
 {
-    U16 Unk00; // TODO
-    U16 Unk01; // TODO
-} MAPSTRUCT4, * MAPSTRUCT4PTR;
-
-typedef struct MissionObjects
-{
-    MAPSTRUCT3 Unk00[MAX_MAP_STRUCT3_COUNT]; // TODO
-    MAPSTRUCT4 Unk01[MAX_MAP_STRUCT4_COUNT]; // TODO
+    U16 X; // TODO
+    U16 Y; // TODO
 } MISSIONOBJECTS, * MISSIONOBJECTSPTR;
 
 typedef struct MissionScripts
@@ -101,7 +95,8 @@ typedef struct Map
 {
     MAPHEADER       Header;
     MAPDESCRIPTOR   Descriptor;
-    MISSIONOBJECTS  Objects;
+    MAPSTRUCT3      Unk00[MAX_MAP_STRUCT3_COUNT];
+    MISSIONOBJECTS  Objects[MAX_MAP_MISSION_OBJECTS]; //mis_objects, coordinates airships
     LPSTR           Description;
     PIXEL*          Pixels;
     LPSTR           MissionDescription;

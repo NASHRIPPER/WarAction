@@ -207,27 +207,27 @@ BOOL InitializeMultiMap(LPCSTR name, MAPPTR map)
     ReadZipFile(&zip, &map->Header, sizeof(MAPHEADER));
     ReadZipFile(&zip, &map->Descriptor.Actors, sizeof(MAPMINMAX));
 
-    ReadZipFile(&zip, &map->Objects.Unk00, MAX_MAP_STRUCT3_COUNT * sizeof(MAPSTRUCT3));
+    ReadZipFile(&zip, &map->Unk00, MAX_MAP_STRUCT3_COUNT * sizeof(MAPSTRUCT3));
 
     for (U32 x = 0; x < MAX_MAP_STRUCT3_COUNT; x++)
     {
-        if (map->Objects.Unk00[x].Unk00 < 0 || map->Objects.Unk00[x].Unk01 < 0
-            || map->Descriptor.Details.Width <= map->Objects.Unk00[x].Unk00
-            || map->Descriptor.Details.Height <= map->Objects.Unk00[x].Unk01
-            || map->Objects.Unk00[x].Unk02 < 0 || (MAX_MAP_SIZE - 1) < map->Objects.Unk00[x].Unk02)
+        if (map->Unk00[x].Unk00 < 0 || map->Unk00[x].Unk01 < 0
+            || map->Descriptor.Details.Width <= map->Unk00[x].Unk00
+            || map->Descriptor.Details.Height <= map->Unk00[x].Unk01
+            || map->Unk00[x].Unk02 < 0 || (MAX_MAP_SIZE - 1) < map->Unk00[x].Unk02)
         {
-            map->Objects.Unk00[x].Unk00 = 0;
-            map->Objects.Unk00[x].Unk02 = 0;
-            map->Objects.Unk00[x].Unk01 = 0;
+            map->Unk00[x].Unk00 = 0;
+            map->Unk00[x].Unk02 = 0;
+            map->Unk00[x].Unk01 = 0;
         }
     }
 
     ReadZipFile(&zip, &map->Descriptor.Details, sizeof(MAPDETAILS));
 
-    for (U32 x = 0; x < MAX_MAP_STRUCT4_COUNT; x++)
+    for (U32 x = 0; x < MAX_MAP_MISSION_OBJECTS; x++)
     {
-        ReadZipFile(&zip, &map->Objects.Unk01[x], sizeof(U32));
-        map->Objects.Unk01[x].Unk01 = 0xffff; // TODO
+        ReadZipFile(&zip, &map->Objects[x], sizeof(U32));
+        map->Objects[x].Y = 0xffff; // TODO
     }
 
     {
@@ -510,20 +510,20 @@ VOID ParseMapScriptCommands(MAPPTR map, S32* commands)
                 {
                     value = ptr[-5];
                     INCREMENT(ptr, -5);
-                    FUN_100181f0(map, value); break;
+                    UpdateMissionObject(map, value); break;
                 }
                 case SCRIPTSCOMMAND_MULTI_PLANES_FOR_FLAGS:
                 case SCRIPTSCOMMAND_MULTI_PLANES_MISSIONS_FOR_FLAGS:
                 {
                     value = ptr[-3];
                     INCREMENT(ptr, -3);
-                    FUN_100181f0(map, value); break;
+                    UpdateMissionObject(map, value); break;
                 }
                 case SCRIPTSCOMMAND_MULTI_PHRASE_FOR_FLAGS:
                 {
                     value = ptr[-2];
                     INCREMENT(ptr, -2);
-                    FUN_100181f0(map, value); break;
+                    UpdateMissionObject(map, value); break;
                 }
                 }
             }
@@ -540,7 +540,26 @@ VOID ParseMapScriptCommands(MAPPTR map, S32* commands)
 }
 
 // 0x100181f0
-VOID FUN_100181f0(MAPPTR map, S32 value)
+VOID UpdateMissionObject(MAPPTR map, S32 value)
 {
-    // TODO
+    if (!map || !map->Objects)
+        return;
+
+    MISSIONOBJECTSPTR currentObj = map->Objects + 1;
+    MISSIONOBJECTSPTR endObj = currentObj + MAX_MAP_MISSION_OBJECTS;
+
+    U16 tx = 0xFFFF;
+    for (MISSIONOBJECTSPTR obj = currentObj; obj < endObj; obj++)
+    {
+        if (obj->X < tx) tx = obj->X;
+    }
+
+    for (U32 bitIndex = 0; bitIndex < MAX_MAP_MISSION_OBJECTS; bitIndex++)
+    {
+        if (value & (1 << (bitIndex % 32)))
+        {
+            if (currentObj < endObj) currentObj->X = tx + 1;
+        }
+        currentObj++;
+    }
 }
