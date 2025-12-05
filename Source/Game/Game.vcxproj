@@ -212,12 +212,14 @@
     <ClCompile Include="BinFile.cxx" />
     <ClCompile Include="ControlCommand.cxx" />
     <ClCompile Include="Cursor.cxx" />
+    <ClCompile Include="Interface.cxx" />
     <ClCompile Include="Logger.cxx" />
     <ClCompile Include="Main.cxx" />
     <ClCompile Include="Module.cxx" />
     <ClCompile Include="Sound.cxx" />
     <ClCompile Include="State.cxx" />
     <ClCompile Include="Strings.cxx" />
+    <ClCompile Include="Unit.cxx" />
     <ClCompile Include="Window.cxx" />
     <ClCompile Include="ZipFile.cxx" />
   </ItemGroup>
@@ -233,12 +235,14 @@
     <ClInclude Include="Control.hxx" />
     <ClInclude Include="ControlCommand.hxx" />
     <ClInclude Include="Cursor.hxx" />
+    <ClInclude Include="Interface.hxx" />
     <ClInclude Include="Logger.hxx" />
     <ClInclude Include="Module.hxx" />
     <ClInclude Include="Resources.hxx" />
     <ClInclude Include="Sound.hxx" />
     <ClInclude Include="State.hxx" />
     <ClInclude Include="Strings.hxx" />
+    <ClInclude Include="Unit.hxx" />
     <ClInclude Include="Window.hxx" />
     <ClInclude Include="ZipFile.hxx" />
   </ItemGroup>

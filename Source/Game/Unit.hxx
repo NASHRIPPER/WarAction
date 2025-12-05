@@ -1,0 +1,141 @@
+#pragma once
+#include <Action.hxx>
+
+typedef struct UnitScripts
+{
+	S32* ptr000;
+	S32* ptr001;
+	U8 unk003[16]; //string?
+	S32* ptr004;
+	S16 unk005;
+	S16 unk006;
+	S16 unk007;
+	S16 unk008;
+	U8 name[64];  //string?
+	S32 unk010;
+	S32 unk011;
+	S32 unk012;
+	S32 unk013;
+	U8 file[64];
+	S32 selector;
+	S32 health;
+	S32 ammo1;
+	S32 ammo2;
+	S32 sight;
+
+}UNITSCRIPTS, * UNITSCRIPTSPTR;
+
+typedef struct Unit
+{
+	S32* ptr000;
+	UNITSCRIPTSPTR scripts_ptr;
+	S16 unitNumber;
+	S32* ptr003;
+	U8 unk004;
+	U8 unk005;
+	U8 unk006;
+	U8 unk007;
+	S32* ptr008;
+	U8 unk009;
+	U8 unk010;
+	U8 unk011;
+	U8 unk012;
+	U8 unk013;
+	U8 ChosenStatus;
+	U8 unk015;
+	U8 unk016;
+	S16 unk017;
+	S32 unk018;
+	U8 unk019;
+	S16 unk020;
+	S16 unk021;
+	S16 unk022;
+	S16 unk023;
+	S16 unk024;
+	S16 unitPositionX;
+	S16 unitPositionY;
+	S16 unitLineHPPositionX;
+	S16 unitLineHPPositionY;
+	S16 HP;
+	S16 ammo1;
+	S16 ammo2;
+	S16 unk032;
+	U8 unk033;
+	U32 unk034;
+	U32 unk035;
+	U32 unk036;
+	U32 unk037;
+	U32 unk038;
+	U32 unk039;
+	U32 unk040;
+	U32 unk041;
+	U16 unk042;
+	U8 unk043;
+	U8 unk044;
+	U8 unk045;
+	U8 unk046;
+	U32 unk047;
+	U8 unk048;
+	U32 unk049;
+	U32 unk050;
+	U32 unk051;
+	U32 unk052;
+	U32 unk053;
+	U16 unk054;
+	U8 unk055;
+	U8 unk056;
+	U8 unk057;
+	U8 unk058;
+	U8 unk059;
+	U32 unk060;
+	U32 unk061;
+	U32 unk062;
+	U32 unk063;
+	U32 unk064;
+	U32 unk065;
+	U32 unk066;
+	U32 unk067;
+	U32 unk068;
+	U16 unk069;
+	U8 unitDirection;
+	U32 unk071;
+	U8 vehicleUnitStatus;
+	U8 unk073;
+	U16 unk074;
+	S32* ptr075;
+	U8 solderLineHP;
+	U8 solderLineExperience;
+	U8 solderLineGun1;
+	U8 solderLineGun2;
+	U8 unk080;
+	U16 unk081;
+	U16 unk082;
+	U8 unk083;
+	U16 unk084;
+	U8 unk085;
+	U16 unk086;
+	U8 unk087;
+	U8 unk088;
+	U8 unk089;
+	U16 unk090;
+	U8 unk091;
+	U8 unk092;
+	U8 unk093;
+	U8 unk094;
+	U32 unk095;
+	U8 movementAnimation;
+	U8 vehicleLineHP;
+	U8 vehicleLineExperience;
+	U8 vehicleLineGun1;
+	U8 vehicleLineGun2;
+	U8 unk101;
+	U8 unk102;
+	U8 unk103;
+	U8 unk104;
+	U8 unk105;
+	U8 unk106;
+	U8 unk107;
+}UNIT, *UNITPTR;
+
+VOID RendererVehicleInfo_1000f080(UNITPTR unit, S32 param_2); //thiscall
+VOID RendererUnitInfo_1000ceb0(UNITPTR unit, S32 param_2); //thiscall
