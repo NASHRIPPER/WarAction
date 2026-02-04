@@ -707,16 +707,16 @@ BOOL WriteSaveState(LPCSTR save)
 
         for (U32 x = 0; x < count; x++)
         {
-            U32 local_2c8; // TODO
-            ReadZipFile(&zip, &local_2c8, 4); // TODO
+            U32 length; // Point script line size
+            ReadZipFile(&zip, &length, sizeof(length)); // Find out the size of the script string
 
-            local_2c8 = local_2c8 - 4; // TODO
+            length = length - sizeof(length); // New script line size
 
-            WriteBinFile(&file, &local_2c8, 4); // TODO
+            WriteBinFile(&file, &length, sizeof(length)); 
 
-            U32 local_2b8; // TODO
-            ReadZipFile(&zip, &local_2b8, 4); // TODO
-            WriteZipFile(&zip, &file, local_2c8); // TODO
+            U32 CAOF;
+            ReadZipFile(&zip, &CAOF, sizeof(CAOF)); // Skip CAOF
+            WriteZipFile(&zip, &file, length); // We write the string itself, excluding CAOF
         }
 
         CloseBinFile(&file);
