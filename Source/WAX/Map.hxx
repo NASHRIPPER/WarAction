@@ -36,7 +36,11 @@ SOFTWARE.
 
 #define MAX_SCRIPTS_COUNT                   1024
 
-#define MAX_MAP_MISSION_PLAYER_NAME_LENGTH  37
+#define NATION 4
+
+#define MAX_NAME_LENGTH16  16
+#define MAX_NAME_LENGTH32  32
+#define MAX_NAME_LENGTH64  64
 
 typedef struct MapHeader
 {
@@ -288,33 +292,72 @@ typedef enum ScriptsCommand
 } SCRIPTSCOMMAND, * SCRIPTSCOMMANDPTR;
 
 #pragma pack(push, 1)
+typedef struct MapAviation
+{
+    CHAR    Name[MAX_NAME_LENGTH32];
+    U32     Number;
+    U32     Bombs;
+    U32     Reloads;
+}MAPAVIATION, * MAPAVIATIONPTR;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct MapDescent
+{
+    U8 group;
+    U8 expa;
+    CHAR ID[NATION][MAX_NAME_LENGTH16];
+    U8 number[NATION];
+}MAPDESCENT, * MAPDESCENTPTR;
+#pragma pack (pop)
+
+#pragma pack(push, 1)
+typedef struct MapPlayer
+{
+    CHAR    Name[MAX_NAME_LENGTH32];
+    U8      Team;
+    PIXEL   Color;
+    U8      Nation;
+    U8      Planesdir;
+}MAPPLAYER, * MAPPLAYERRPTR;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
 typedef struct MapMissionPlayer
 {
-    CHAR Name[MAX_MAP_MISSION_PLAYER_NAME_LENGTH];
-    CHAR Unk00[0x13C]; // TODO
+    MAPPLAYER   Player;
+    MAPAVIATION AirReinforcement[NATION];
+    MAPDESCENT  Group[2];
 } MAPMISSIONPLAYER, * MAPMISSIONPLAYERPTR;
 #pragma pack(pop)
 
 typedef struct coordinates16
 {
-    U16 u;
-    U16 v;
+    U16 U;
+    U16 V;
 }COORDINATES16, * COORDINATES16PTR;
 
 typedef struct coordinates32
 {
-    S32 u;
-    S32 v;
+    S32 U;
+    S32 V;
 } COORDINATES32, * COORDINATES32PTR;
 
 #pragma pack(push, 1)
 typedef struct MapMissionWoofer
 {
-    CHAR name[64];
-    coordinates16 pos;
-    U16 radius;
-    F32 worse;
-    U16 minWait;
-    U16 maxWait;
+    CHAR            Name[MAX_NAME_LENGTH64];
+    coordinates16   Pos;
+    U16             Radius;
+    F32             Worse;
+    U16             MinWait;
+    U16             MaxWait;
 } MAPMISSIONWOOFER, * MAPMISSIONWOOFERPTR;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct MapMissionObject
+{
+    coordinates16 Pos[100];
+} MAPMISSIONOBJECT, * MAPMISSIONOBJECTPTR;
 #pragma pack(pop)

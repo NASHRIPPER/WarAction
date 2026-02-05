@@ -753,7 +753,7 @@ BOOL WriteSaveState(LPCSTR save)
     {
         OpenBinFile(&file, "XCHNG\\TOGAME\\mis_objects", BINFILEOPENTYPE_CREATE | BINFILEOPENTYPE_WRITE);
 
-        WriteZipFile(&zip, &file, 400); // TODO
+        WriteZipFile(&zip, &file, sizeof(MAPMISSIONOBJECT));
 
         CloseBinFile(&file);
     }
@@ -955,13 +955,13 @@ BOOL FUN_10018c00(LPCSTR name)
 
         // Replace the first name in the mission to player's name.
 
-        CHAR player[MAX_MAP_MISSION_PLAYER_NAME_LENGTH];
-        ReadBinFile(&file, player, MAX_MAP_MISSION_PLAYER_NAME_LENGTH);
+        CHAR player[sizeof(MAPPLAYER)];
+        ReadBinFile(&file, player, sizeof(MAPPLAYER));
 
         strcpy(player, name);
 
         PointBinFile(&file, sizeof(U32), FILE_BEGIN);
-        WriteBinFile(&file, player, MAX_MAP_MISSION_PLAYER_NAME_LENGTH);
+        WriteBinFile(&file, player, sizeof(MAPPLAYER));
 
         PointBinFile(&file, AcquireBinFileSize(&file), FILE_BEGIN);
         CloseBinFile(&file);
@@ -1164,13 +1164,13 @@ BOOL FUN_10018c00(LPCSTR name)
             ReadZipFile(&zip, &count, sizeof(U32));
             WriteBinFile(&writer, &count, sizeof(U32));
 
-            CHAR player[MAX_MAP_MISSION_PLAYER_NAME_LENGTH];
-            ReadZipFile(&zip, player, MAX_MAP_MISSION_PLAYER_NAME_LENGTH);
+            CHAR player[sizeof(MAPPLAYER)];
+            ReadZipFile(&zip, player, sizeof(MAPPLAYER));
 
             strcpy(player, name);
 
-            WriteBinFile(&writer, player, MAX_MAP_MISSION_PLAYER_NAME_LENGTH);
-            WriteZipFile(&zip, &writer, count * sizeof(MAPMISSIONPLAYER) - MAX_MAP_MISSION_PLAYER_NAME_LENGTH);
+            WriteBinFile(&writer, player, sizeof(MAPPLAYER));
+            WriteZipFile(&zip, &writer, count * sizeof(MAPMISSIONPLAYER) - sizeof(MAPPLAYER));
 
             CloseBinFile(&writer);
         }
@@ -1266,7 +1266,7 @@ BOOL FUN_10018c00(LPCSTR name)
         {
             OpenBinFile(&writer, "XCHNG\\TOGAME\\mis_objects", BINFILEOPENTYPE_CREATE | BINFILEOPENTYPE_WRITE);
 
-            WriteZipFile(&zip, &writer, 400); // TODO
+            WriteZipFile(&zip, &writer, sizeof(MAPMISSIONOBJECT));
 
             CloseBinFile(&writer);
         }
