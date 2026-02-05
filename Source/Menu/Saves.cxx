@@ -517,6 +517,7 @@ BOOL FUN_10019d10(VOID) // TODO
 }
 
 // 0x10019680
+// parsing singl map/mis for game.dll
 BOOL WriteSaveState(LPCSTR save)
 {
     ZIPFILE zip;
@@ -593,7 +594,7 @@ BOOL WriteSaveState(LPCSTR save)
         OpenBinFile(&file, "XCHNG\\TOGAME\\map_mini", BINFILEOPENTYPE_CREATE | BINFILEOPENTYPE_WRITE);
 
         CONST U32 length =
-            width <= MAX_MAP_SIZE && height <= MAX_MAP_SIZE ? width * height * 2 : height * width / 2;
+            width <= MAX_MAP_SIZE && height <= MAX_MAP_SIZE ? width * height * sizeof(PIXEL) : height * width / sizeof(PIXEL);
 
         WriteZipFile(&zip, &file, length);
 
@@ -603,7 +604,7 @@ BOOL WriteSaveState(LPCSTR save)
     {
         OpenBinFile(&file, "XCHNG\\TOGAME\\map_rhombs", BINFILEOPENTYPE_CREATE | BINFILEOPENTYPE_WRITE);
 
-        WriteZipFile(&zip, &file, width * height * 2); // TODO
+        WriteZipFile(&zip, &file, width * height * sizeof(MAPRHOMBS)); // TODO
 
         CloseBinFile(&file);
     }
@@ -853,7 +854,7 @@ BOOL SaveMapState(CONST S32 map)
         {
             OpenBinFile(&file, "XCHNG\\STATE\\map_rhombs", BINFILEOPENTYPE_CREATE | BINFILEOPENTYPE_WRITE);
 
-            WriteZipFile(&zip, &file, width * height * 2); // TODO
+            WriteZipFile(&zip, &file, width * height * sizeof(MAPRHOMBS));
 
             CloseBinFile(&file);
         }
@@ -869,7 +870,7 @@ BOOL SaveMapState(CONST S32 map)
         {
             OpenBinFile(&file, "XCHNG\\STATE\\map_mini1", BINFILEOPENTYPE_CREATE | BINFILEOPENTYPE_WRITE);
 
-            WriteZipFile(&zip, &file, width * height * 2); // TODO
+            WriteZipFile(&zip, &file, width * height * sizeof(PIXEL));
 
             CloseBinFile(&file);
         }
@@ -943,6 +944,7 @@ BOOL SaveMap(CONST S32 map)
 }
 
 // 0x10018c00
+// parsing companing map/mis for game.dll
 BOOL FUN_10018c00(LPCSTR name)
 {
     if (AcquireCurrentGameMap() == DEFAULT_GAME_MAP_INDEX)
@@ -1010,7 +1012,8 @@ BOOL FUN_10018c00(LPCSTR name)
         U32 iStack_3e8, iStack_3ec, iStack_3f0, uStack_3f4, iStack_3f8; // TODO
 
         {
-            U32 auStack_33c, uStack_400; // TODO
+            U32 auStack_33c; // TODO
+            U32 type = MAPTYPE_SUMMER;
 
             ReadZipFile(&zip, &iStack_3e8, 4); // TODO
             ReadZipFile(&zip, &iStack_3ec, 4); // TODO
@@ -1019,7 +1022,7 @@ BOOL FUN_10018c00(LPCSTR name)
 
             OpenBinFile(&reader, "XCHNG\\STATE\\map_info", BINFILEOPENTYPE_READ);
 
-            ReadBinFile(&reader, &uStack_400, 4); // TODO
+            ReadBinFile(&reader, &type, sizeof(U32));
             ReadBinFile(&reader, &iStack_3f0, 4); // TODO
             ReadBinFile(&reader, &auStack_33c, 4); // TODO
 
@@ -1027,7 +1030,7 @@ BOOL FUN_10018c00(LPCSTR name)
 
             OpenBinFile(&writer, "XCHNG\\TOGAME\\map_info", BINFILEOPENTYPE_CREATE | BINFILEOPENTYPE_WRITE);
 
-            WriteBinFile(&writer, &uStack_400, 4); // TODO
+            WriteBinFile(&writer, &type, sizeof(U32));
             WriteBinFile(&writer, &iStack_3e8, 4); // TODO
             WriteBinFile(&writer, &iStack_3ec, 4); // TODO
             WriteBinFile(&writer, &uStack_3f4, 4); // TODO

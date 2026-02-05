@@ -361,3 +361,11 @@ typedef struct MapMissionObject
     coordinates16 Pos[100];
 } MAPMISSIONOBJECT, * MAPMISSIONOBJECTPTR;
 #pragma pack(pop)
+
+#pragma pack(push, 1)
+typedef struct MapRhombs
+{
+    U8 TileType;
+    U8 TileGamma;
+}MAPRHOMBS, * MAPRHOMBSPTR;
+#pragma pack(pop)
