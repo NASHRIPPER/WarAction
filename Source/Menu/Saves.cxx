@@ -714,8 +714,8 @@ BOOL WriteSaveState(LPCSTR save)
 
             WriteBinFile(&file, &length, sizeof(length)); 
 
-            U32 CAOF;
-            ReadZipFile(&zip, &CAOF, sizeof(CAOF)); // Skip CAOF
+            U32 caof;
+            ReadZipFile(&zip, &caof, sizeof(caof)); // Skip CAOF
             WriteZipFile(&zip, &file, length); // We write the string itself, excluding CAOF
         }
 
@@ -1203,16 +1203,16 @@ BOOL FUN_10018c00(LPCSTR name)
 
             for (U32 x = 0; x < count; x++)
             {
-                U32 uStack_3fc; // TODO
-                ReadZipFile(&zip, &uStack_3fc, 4); // TODO
+                U32 length;
+                ReadZipFile(&zip, &length, sizeof(length));
 
-                uStack_3fc = uStack_3fc - 4; // TODO
+                length = length - sizeof(length);
 
-                WriteBinFile(&writer, &uStack_3fc, 4); // TODO
+                WriteBinFile(&writer, &length, sizeof(length));
 
-                U32 local_3d8; // TODO
-                ReadZipFile(&zip, &local_3d8, 4); // TODO
-                WriteZipFile(&zip, &writer, uStack_3fc); // TODO
+                U32 caof;
+                ReadZipFile(&zip, &caof, sizeof(caof));
+                WriteZipFile(&zip, &writer, length);
             }
 
             CloseBinFile(&writer);
