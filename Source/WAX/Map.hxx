@@ -58,6 +58,12 @@ typedef struct MapMinMax
     U32 Unk03; // TODO
 } MAPMINMAX, * MAPMINMAXPTR;
 
+typedef struct MapParameters
+{
+    MAPHEADER   Header;
+    MAPMINMAX   Actors;
+} MAPPARAMETERS, * MAPPARAMETERSPTR;
+
 typedef enum MapType
 {
     MAPTYPE_SUMMER	= 0,
@@ -312,12 +318,16 @@ typedef struct MapDescent
 #pragma pack (pop)
 
 #pragma pack(push, 1)
+/**
+ * @param Owner - player=0, enemy=1, ally=2, neutral=3.
+ * @param Planesdir - plane rotation, clockwise from 0 to 7, 8 positions in total.
+ */
 typedef struct MapPlayer
 {
     CHAR    Name[MAX_NAME_LENGTH32];
     U8      Team;
     PIXEL   Color;
-    U8      Nation;
+    U8      Owner;
     U8      Planesdir;
 }MAPPLAYER, * MAPPLAYERRPTR;
 #pragma pack(pop)
@@ -368,4 +378,22 @@ typedef struct MapRhombs
     U8 TileType;
     U8 TileGamma;
 }MAPRHOMBS, * MAPRHOMBSPTR;
+#pragma pack(pop)
+
+#pragma pack(push, 1)
+/**
+ * @param Pos - object position on the map.
+ * @param ObG - object grup: 1 - Free objects; 2 - Lying down objects; 3 - Standing objects; 4 - Trees; 5 - Streets; 6 - Buildings; 7 - Fences 8 - Cliffs; 9 - Crater; 10 - Bridges.
+ * @param Ob  - object number.
+ * @param HP  - hitpoint.
+ * @param Typ - ???.
+ */
+typedef struct MapObject
+{
+    coordinates16 Pos;
+    U8 ObG;
+    U8 Ob;
+    U8 HP;
+    U8 Typ;
+}MAPOBJECT, * MAPOBJECTPTR;
 #pragma pack(pop)
